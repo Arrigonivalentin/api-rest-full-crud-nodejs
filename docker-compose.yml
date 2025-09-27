@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-node-api
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: usersdb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: node-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_USER: user
+      DB_PASSWORD: example
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: usersdb
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:
